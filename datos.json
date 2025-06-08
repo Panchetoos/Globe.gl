@@ -62,5 +62,13 @@
     "ano": "MAria",
     "actividad": "2002",
     "timestamp": "2025-06-08T22:08:27.002Z"
+  },
+  {
+    "lat": -0.2994184,
+    "lng": -78.4216303,
+    "nombre": "2019",
+    "ano": "Cocinando",
+    "actividad": "Julian",
+    "timestamp": "2025-06-08T22:08:53.399Z"
   }
 ]
