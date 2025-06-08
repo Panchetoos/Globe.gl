@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Globo Interactivo - Comunidad LULI</title>
+    <style>
+        body { margin: 0; }
+        #globeViz { width: 100vw; height: 100vh; }
+        .info-panel {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: sans-serif;
+            max-width: 300px;
+        }
+        .info-panel h1 { margin-top: 0; font-size: 1.5em; }
+        .info-panel p { margin: 5px 0; }
+    </style>
+    
+    <!-- Librerías requeridas -->
+    <script src="//unpkg.com/three"></script>
+    <script src="//unpkg.com/globe.gl"></script>
+</head>
+<body>
+
+    <div id="globeViz"></div>
+    <div class="info-panel">
+        <h1>Comunidad LULI Global</h1>
+        <p>Ubicaciones en tiempo real de los miembros de la comunidad.</p>
+        <p><strong>Total de Puntos:</strong> <span id="total-puntos">0</span></p>
+    </div>
+
+    <script>
+        // URL al archivo de datos en tu repositorio de GitHub Pages
+        // Asegúrate de que esta URL sea la correcta para tu repo
+        const DATA_URL = 'datos.json'; 
+
+        // Inicializar el globo
+        const miGlobo = Globe()
+            (document.getElementById('globeViz'))
+            .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+            .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
+            .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
+            .pointColor(() => 'rgba(255, 215, 0, 0.8)') // Color dorado
+            .pointAltitude(0) // Puntos pegados a la superficie
+            .pointRadius(0.25) // Radio de los puntos
+            .pointLabel(d => `
+                <b>${d.nombre}</b><br>
+                Año Cert.: ${d.ano}<br>
+                Actividad: ${d.actividad}
+            `);
+
+        // Función para obtener los datos y actualizar el globo
+        async function fetchDataAndUpdateGlobe() {
+            try {
+                // Usamos 'cache: no-cache' para asegurarnos de obtener siempre la última versión del archivo
+                const response = await fetch(DATA_URL, { cache: 'no-cache' });
+                if (!response.ok) {
+                    throw new Error(`Error en la red: ${response.statusText}`);
+                }
+                const data = await response.json();
+                
+                // Actualizamos los datos de los puntos en el globo
+                miGlobo.pointsData(data);
+
+                // Actualizamos el contador de puntos
+                document.getElementById('total-puntos').textContent = data.length;
+
+                console.log('Globo actualizado con', data.length, 'puntos.');
+
+            } catch (error) {
+                console.error('No se pudieron cargar los datos:', error);
+            }
+        }
+
+        // --- INICIO ---
+        // 1. Cargar los datos por primera vez
+        fetchDataAndUpdateGlobe();
+
+        // 2. Establecer un intervalo para buscar actualizaciones cada 10 segundos (10000 ms)
+        // Puedes ajustar este tiempo según tus necesidades
+        setInterval(fetchDataAndUpdateGlobe, 10000);
+    </script>
+</body>
+</html>

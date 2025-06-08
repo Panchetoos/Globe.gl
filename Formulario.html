@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Ubicación - Comunidad LULI</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; background-color: #f4f4f4; border-radius: 8px; }
+        h1 { color: #333; }
+        label { display: block; margin-top: 15px; }
+        input[type="text"], textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
+        button { background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-top: 20px; }
+        button:disabled { background-color: #ccc; }
+        #status { margin-top: 15px; font-style: italic; color: #555; }
+    </style>
+</head>
+<body>
+
+    <h1>Registro de Ubicación - Comunidad LULI</h1>
+    <p>Por favor, permite el acceso a tu ubicación para poder añadirte al mapa. Tu ubicación se registrará al momento de enviar el formulario.</p>
+
+    <!-- Reemplaza "TU_URL_DE_ACCION_DE_GOOGLE_FORM" con la URL de acción de tu formulario -->
+    <form id="registroForm" action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSd1ki4_BZA4wtyTNFxBDvPljSOP6TJZ8QCu1tC8fiaWakmQIA/formResponse" method="POST" target="hidden_iframe" onsubmit="enviado=true;">
+        
+        <label for="nombres">Nombres:</label>
+        <!-- Reemplaza "entry.493506161" con el ID de tu campo "Nombres" -->
+        <input type="text" id="nombres" name="entry.493506161" required>
+
+        <label for="ano">Año de certificación de LULI:</label>
+        <!-- Reemplaza "entry.2030651571" con el ID de tu campo "Año" -->
+        <input type="text" id="ano" name="entry.2030651571" required>
+
+        <label for="actividad">¿En qué te encuentras ahora?</label>
+        <!-- Reemplaza "entry.256185969" con el ID de tu campo "Actividad" -->
+        <textarea id="actividad" name="entry.256185969" rows="4" required></textarea>
+
+        <!-- Campos ocultos para la geolocalización -->
+        <!-- Reemplaza "entry.LAT_ID" y "entry.LON_ID" con los IDs correspondientes -->
+        <input type="hidden" id="latitud" name="entry.1480344834">
+        <input type="hidden" id="longitud" name="entry.508696148">
+
+        <button type="submit" id="submitBtn" disabled>Obteniendo ubicación...</button>
+    </form>
+    
+    <div id="status"></div>
+    
+    <!-- Iframe para que el envío no recargue la página -->
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+    <script>
+        const form = document.getElementById('registroForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusDiv = document.getElementById('status');
+        let enviado = false;
+
+        window.onload = function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                statusDiv.innerHTML = "La geolocalización no es soportada por este navegador.";
+                submitBtn.disabled = true; // No se puede enviar sin ubicación
+            }
+        };
+
+        function showPosition(position) {
+            document.getElementById('latitud').value = position.coords.latitude;
+            document.getElementById('longitud').value = position.coords.longitude;
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Enviar mi ubicación';
+            statusDiv.innerHTML = '¡Ubicación obtenida! Ya puedes enviar el formulario.';
+        }
+
+        function showError(error) {
+            let message = "";
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    message = "Permiso de ubicación denegado. Por favor, actívalo en los ajustes de tu navegador.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    message = "La información de ubicación no está disponible.";
+                    break;
+                case error.TIMEOUT:
+                    message = "La solicitud para obtener la ubicación ha caducado.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    message = "Ha ocurrido un error desconocido.";
+                    break;
+            }
+            statusDiv.innerHTML = message;
+            submitBtn.disabled = true;
+        }
+
+        form.addEventListener('submit', function() {
+            setTimeout(() => {
+                if(enviado) {
+                    statusDiv.innerHTML = '¡Gracias! Tus datos han sido enviados correctamente.';
+                    form.reset();
+                    submitBtn.innerText = 'Obteniendo ubicación...';
+                    submitBtn.disabled = true;
+                    window.onload(); // Volvemos a pedir la ubicación para un nuevo envío
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
