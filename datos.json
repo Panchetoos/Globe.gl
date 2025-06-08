@@ -22,5 +22,13 @@
     "ano": "Alvaro Aguilar",
     "actividad": "2020",
     "timestamp": "2025-06-08T20:45:19.053Z"
+  },
+  {
+    "lat": -9.189967,
+    "lng": -75.015152,
+    "nombre": "Juan Pedro Simon",
+    "ano": "2022",
+    "actividad": "Trabando en FYA",
+    "timestamp": "2025-06-08T20:48:51.475Z"
   }
 ]
