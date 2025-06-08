@@ -46,5 +46,13 @@
     "ano": "2019",
     "actividad": "Estudiando",
     "timestamp": "2025-06-08T21:59:53.904Z"
+  },
+  {
+    "lat": -0.3309568,
+    "lng": -78.4531456,
+    "nombre": "Maestr?a",
+    "ano": "Pedro",
+    "actividad": "2018",
+    "timestamp": "2025-06-08T22:01:42.223Z"
   }
 ]
