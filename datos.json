@@ -54,5 +54,13 @@
     "ano": "Pedro",
     "actividad": "2018",
     "timestamp": "2025-06-08T22:01:42.223Z"
+  },
+  {
+    "lat": 51.919438,
+    "lng": 19.145136,
+    "nombre": "Estudiando PDH",
+    "ano": "MAria",
+    "actividad": "2002",
+    "timestamp": "2025-06-08T22:08:27.002Z"
   }
 ]
